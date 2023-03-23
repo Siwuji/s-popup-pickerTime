@@ -9,7 +9,7 @@
     	<view class="content">
     		<view>当前日期时间格式为:{{dateParms}}</view>
     		<input @focus="showPicker" placeholder="默认格式yyyy-MM-dd" :value="value" />
-    		<sDatePicker ref="datePicker" @confirm="saveDate" :showClearBtn="true" :type="dateParms"></sDatePicker>
+    		<sDatePicker ref="datePicker" @confirm="saveDate" :defaultValue="value" :showClearBtn="true" :type="dateParms" :YearInterval="YearInterval"></sDatePicker>
     	</view>
     </template>
     
@@ -19,7 +19,8 @@
     		data() {
     			return {
     				dateParms: 'yyyy-MM-dd',
-    				value:""
+    				value:"",
+					YearInterval:[10,1]
     			}
     		},
     		onLoad() {
