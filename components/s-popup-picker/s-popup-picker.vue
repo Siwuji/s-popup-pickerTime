@@ -7,9 +7,9 @@
 				<text class="t3" @click="reset" v-if="showClearBtn">清空</text>
 				<text class="t2" @click="confirm">确认</text>
 			</view>
-			<view>
+			<view ref="pickerDom">
 				<picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange" class="picker-view">
-					<picker-view-column v-for="e in types">
+					<picker-view-column v-for="(e,index) in types" :key="index">
 						<view v-if="e == 'yyyy'" class="item" v-for="(yitem, yindex) in years" :key="yindex">{{ yitem }}年</view>
 						<view v-if="e == 'MM'" class="item" v-for="(Mitem, Mindex) in months" :key="Mindex">{{ Mitem }}月</view>
 						<view v-if="e == 'dd'" class="item" v-for="(ditem, dindex) in days" :key="dindex">{{ ditem }}日</view>
@@ -39,8 +39,7 @@ export default {
 			days: [],
 			hours: [],
 			mins: [],
-			secs: [],
-			yearShow: false
+			secs: []
 		};
 	},
 	props: {
@@ -52,7 +51,11 @@ export default {
 			type: Boolean,
 			default: () => true
 		},
-		bindValue: {
+		YearInterval: {
+			type: Array,
+			default: () => [15, 0]
+		},
+		defaultValue: {
 			type: String,
 			default: () => ''
 		}
@@ -82,38 +85,22 @@ export default {
 		},
 		bindChange(e) {
 			const val = e.detail.value;
-			this.pickertime._year = this.yearShow > -1 ? this.years[val[this.yearShow]] : '';
-			this.pickertime._month = this.monthShow > -1 ? this.months[val[this.monthShow]] : '';
-			this.pickertime._day = this.dayShow > -1 ? this.days[val[this.dayShow]] : '';
-
-			this.pickertime._hour = this.hourShow > -1 ? this.hours[val[this.hourShow]] : '';
-			this.pickertime._min = this.minShow > -1 ? this.mins[val[this.minShow]] : '';
-			this.pickertime._sec = this.secShow > -1 ? this.secs[val[this.secShow]] : '';
-			this.pickertime.lastday = this.pickertime.getMonthLastDay(this.pickertime._year, this.pickertime._months);
-			this.pickertime.changeDays();
+			this.pickertime.changeValue(val);
+			this.renderData();
 		},
 		checkType() {
-			this.pickertime = new sPopupPickerTime(this.type);
-			this.value = [];
+			this.pickertime = new sPopupPickerTime(this.type, this.YearInterval,this.defaultValue);
+			this.value = this.pickertime.returnValue();
 			this.types = this.pickertime.types;
+			this.renderData();
+		},
+		renderData() {
 			this.years = this.pickertime.years;
 			this.months = this.pickertime.months;
 			this.days = this.pickertime.days;
 			this.hours = this.pickertime.hours;
 			this.mins = this.pickertime.mins;
 			this.secs = this.pickertime.secs;
-			this.yearShow = this.pickertime.findIndex('yyyy');
-			this.yearShow > -1 && this.value.push(this.years.length - 1);
-			this.monthShow = this.pickertime.findIndex('MM');
-			this.monthShow > -1 && this.value.push(this.pickertime._month - 1);
-			this.dayShow = this.pickertime.findIndex('dd');
-			this.dayShow > -1 && this.value.push(this.pickertime._day - 1);
-			this.hourShow = this.pickertime.findIndex('HH');
-			this.hourShow > -1 && this.value.push(this.pickertime._hour - 1);
-			this.minShow = this.pickertime.findIndex('mm');
-			this.minShow > -1 && this.value.push(this.pickertime._min);
-			this.secShow = this.pickertime.findIndex('ss');
-			this.secShow > -1 && this.value.push(this.pickertime._sec);
 		}
 	}
 };
