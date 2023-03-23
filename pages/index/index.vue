@@ -7,10 +7,11 @@
 		<button @click="changeDateParms2">来个中文?</button>
 		
 		<view class="default">
-			注释:1.type默认为yyyy-MM-dd，可不传。2.能通过uni编译的小程序应该都可以使用,因我只试了微信和钉钉，所以其它小程序需要自行测试。
-			
+			注释：<br/>
+			1.type默认为yyyy-MM-dd，可不传。<br/>2.能通过uni编译的小程序应该都可以使用,因我只试了微信和钉钉，所以其它小程序需要自行测试。<br/>
+			3.@confirm 点击确认事件;defaultValue 默认值(可不传);showClearBtn 显示清空按钮(可不传,默认true);type 时间格式;YearInterval 年份区间(默认为15年前到今年)
 		</view>
-		<sDatePicker ref="datePicker" @confirm="saveDate" :showClearBtn="true" :type="dateParms" ></sDatePicker>
+		<sDatePicker ref="datePicker" @confirm="saveDate" :defaultValue="value" :showClearBtn="true" :type="dateParms" :YearInterval="YearInterval"></sDatePicker>
 	</view>
 </template>
 
@@ -20,7 +21,8 @@
 		data() {
 			return {
 				dateParms: 'yyyy-MM-dd',
-				value:""
+				value:"2021-05-10",
+				YearInterval:[10,1]
 			}
 		},
 		onLoad() {
@@ -35,14 +37,14 @@
 			},
 			saveDate(e) {
 				//日期选择器【确认】事件
-				console.log(e)
+				// console.log(e)
 				this.value = e;
 			},
 			changeDateParms(){
 				this.dateParms = "yyyy-MM-dd HH:mm:ss"
 			},
 			changeDateParms1(){
-				this.dateParms = "yyyy HH:mm"
+				this.dateParms = "yyyy-MM HH:mm"
 			},
 			changeDateParms2(){
 				this.dateParms = "yyyy HH时"
